@@ -8,15 +8,18 @@ load_dotenv()
 
 def crawl(path: str):
     driver = webdriver.Chrome()
-    stats_container = 'section[class*="TLStatsPageCSS"]'
 
     driver.get(path)
     try:
-        stats = driver.find_element(By.CSS_SELECTOR, 'section[class*="TLStatsPageCSS"]')
+        categoryLinks = driver.find_elements(By.CSS_SELECTOR, 'div[class*="TLStatsTopThreeHeader"] a')
+        categoryNames = driver.find_elements(By.CSS_SELECTOR, 'h3[class*=TLStatsTopThreeHeader')
+        categories = zip(categoryNames, categoryLinks)
+        for category in categories:
+            collect(category[0], category[1])
     finally:
         driver.quit()
 
-def collect():
+def collect(name, link):
     pass
 
 def main():
