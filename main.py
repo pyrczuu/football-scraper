@@ -35,23 +35,24 @@ def crawl(path: str):
         print(category_links)
         for category in categories:
             logger.info(f"Visiting {category[1]}")
-            collect(driver, category[0], category[1])
+            collect(driver, category[0].text, category[1])
     finally:
         logger.info("Closing driver")
         driver.quit()
 
 def collect(driver, category, link):
     driver.get(link)
-    players = driver.find_elements(By.CSS_SELECTOR, 'div[class*=LeagueSeasonStatsTableCSS a')
-    with open('test.txt', 'a') as f:
-        f.write(f"player | {category}")
+    #players = driver.find_elements(By.CSS_SELECTOR, 'div[class*=LeagueSeasonStatsTableCSS a')
+    with open('test.txt', 'w') as f:
+        f.write(20*'=' f" {category} " + 20*'=' + "\n")
 
-        for player in players:
-            name = driver.find_element(By.CSS_SELECTOR, 'span[class*=TeamOrPlayerName')
-            value = driver.find_element(By.CSS_SELECTOR, 'span[class*=StatValue')
+        names = driver.find_elements(By.CSS_SELECTOR, 'span[class*=TeamOrPlayerName')
+        values = driver.find_elements(By.CSS_SELECTOR, 'span[class*=StatValue')
 
-            # temp solution for testing
-            f.write(f"{name}; {value}\n")
+        logger.info(f"Category={category} | players={len(names)} | values={len(values)}")
+
+        for i in range(len(names)):
+            f.write(f"{names[i].text}; {values[i].text}\n")
 
 def main():
     logging.basicConfig(level=logging.INFO)
